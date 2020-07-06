@@ -32,7 +32,7 @@ let g:lightline = {
       \ 'colorscheme': 'onedark',
       \ }
 
-let g:coc_node_path = '/home/mateo/.nvm/versions/node/v12.16.3/bin/node'
+let g:coc_node_path = system("which node")[:-2] 
 set statusline^=%{coc#status()}
 set shiftwidth=2
 set tabstop=2
