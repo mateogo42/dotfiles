@@ -1,4 +1,8 @@
 # Colors (Tomorrow Night)
+window:
+  padding:
+    x: 10
+    y: 10
 background_opacity: 1.0
 shell:
   program: /bin/fish

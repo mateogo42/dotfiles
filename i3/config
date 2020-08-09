@@ -62,7 +62,7 @@ assign [class="Slack"] $ws5
 for_window [class=".*"] border pixel 0
 gaps inner 10
 gaps outer 5
-
+gaps top 45
 # Open specific applications in floating mode
 for_window [title="Microsoft Teams Notification"] floating enable
 for_window [title="alsamixer"] floating enable border pixel 1
@@ -172,6 +172,8 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
+workspace 3 output eDP1
+
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
@@ -251,7 +253,3 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 # Wallpaper and compositor
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
-# Spotify
-exec --no-startup-id i3-msg 'workspace $ws4; exec spotify'
-# Alacritty
-exec --no-startup-id alacritty

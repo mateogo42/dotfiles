@@ -17,12 +17,15 @@ call plug#end()
 
 let g:airline_theme='onedark'
 syntax on
+let g:onedark_color_overrides = {
+			\	"comment_grey": {"gui": "#5C7E8C", "cterm": "66", "cterm16": "255"},
+			\}
 colorscheme onedark
 highlight Normal ctermbg=black
 highlight Pmenu ctermbg=black ctermfg=gray
 highlight PmenuSel ctermbg=white ctermfg=gray
 
-let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_lines = 0
 let g:gitgutter_highlight_linenrs = 1
 
 let g:NERDTreeWinSize=30
