@@ -15,6 +15,18 @@ Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
+" Start Page
+ let g:startify_custom_header = [
+ \ '                                        ▟▙            ',
+ \ '                                        ▝▘            ',
+ \ '██▃▅▇█▆▖  ▗▟████▙▖   ▄████▄   ██▄  ▄██  ██  ▗▟█▆▄▄▆█▙▖',
+ \ '██▛▔ ▝██  ██▄▄▄▄██  ██▛▔▔▜██  ▝██  ██▘  ██  ██▛▜██▛▜██',
+ \ '██    ██  ██▀▀▀▀▀▘  ██▖  ▗██   ▜█▙▟█▛   ██  ██  ██  ██',
+ \ '██    ██  ▜█▙▄▄▄▟▊  ▀██▙▟██▀   ▝████▘   ██  ██  ██  ██',
+ \ '▀▀    ▀▀   ▝▀▀▀▀▀     ▀▀▀▀       ▀▀     ▀▀  ▀▀  ▀▀  ▀▀',
+ \ '',
+ \]
+
 let g:airline_theme='onedark'
 syntax on
 let g:onedark_color_overrides = {
