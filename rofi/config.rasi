@@ -3,6 +3,13 @@
   text-color: #8ca0aa;
   spacing: 0;
   width: 512px;
+	font: "FiraCode Nerd Font 12";
+}
+
+window {
+	border: 5px;
+	border-color: #61afef;
+	border-radius: 10;
 }
 
 inputbar {
@@ -39,5 +46,6 @@ element {
 }
 
 element selected {
-  background-color: #2e343f;
+	text-color: #282c34;
+  background-color: #61afef;
 }

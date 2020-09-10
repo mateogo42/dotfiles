@@ -20,7 +20,7 @@ theme.magenta = "#c678dd"
 theme.cyan = "#56b6c2"
 theme.white = "#abb2bf"
 
-theme.font          = "Font Awesome 5 Free 10"
+theme.font          = "Font Awesome 5 Free Solid 10"
 
 theme.bg_normal     = theme.black
 theme.bg_focus      = theme.red
@@ -28,10 +28,10 @@ theme.bg_urgent     = theme.red
 theme.bg_minimize   = "#444444"
 
 theme.bg_systray    = theme.bg_normal
-theme.systray_icon_spacing = dpi(10)
+theme.systray_icon_spacing = dpi(20)
 
 theme.fg_normal     = theme.white
-theme.fg_focus      = theme.black
+theme.fg_focus      = theme.white
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
@@ -52,16 +52,18 @@ theme.border_marked = "#91231c"
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
---theme.taglist_bg_focus = "#ff0000"
+theme.taglist_bg_focus = theme.black
 
+theme.tasklist_bg_normal = theme.black
+theme.tasklist_bg_focus = theme.black
 -- Generate taglist squares:
-local taglist_square_size = dpi(4)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
-)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
-)
+-- local taglist_square_size = dpi(4)
+-- theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
+--     taglist_square_size, theme.fg_normal
+-- )
+-- theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
+--     taglist_square_size, theme.fg_normal
+-- )
 
 -- Variables set for theming notifications:
 -- notification_font
@@ -108,7 +110,7 @@ theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar
 theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = "~/Pictures/wallpaper.jpg"
+theme.wallpaper = "~/Pictures/aurora.png"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
@@ -140,7 +142,7 @@ theme.icon_theme = nil
 -- wibar theme
 theme.wibar_position = "top"
 theme.wibar_bg = "#00000000"
-theme.wibar_height = 35
+theme.wibar_height = 40
 
 return theme
 
