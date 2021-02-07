@@ -11,6 +11,10 @@ Plug 'joshdick/onedark.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'ycm-core/YouCompleteMe'
 Plug 'timonv/vim-cargo'
+Plug 'rust-lang/rust.vim'
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+Plug 'dag/vim-fish'
 Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 call plug#end()
@@ -35,8 +39,17 @@ map <C-b> :NERDTreeToggle<CR>
 let g:lightline = {
       \ 'colorscheme': 'onedark',
       \ }
+"Rust
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
 
+"Go
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+
+"Node
 let g:coc_node_path = system("which node")[:-2] 
+
 set statusline^=%{coc#status()}
 set shiftwidth=2
 set tabstop=2

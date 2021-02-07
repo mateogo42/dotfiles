@@ -19,6 +19,10 @@ require("awful.hotkeys_popup.keys.vim")
 -- Spotify integration
 local spotify_widget = require("spotify")
 
+require("sidebar")
+
+local tagnames = {"", "", "", "", "", ""}
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -55,7 +59,7 @@ beautiful.init("/home/mateo/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 browser = "google-chrome-stable"
-filemanager = "exo-open --launch FileManager" or "thunar"
+filemanager = "exo-open --launch FileManager" or "dolphin"
 gui_editor = "mousepad"
 terminal = "alacritty"
 
@@ -196,7 +200,7 @@ awful.screen.connect_for_each_screen(function(s)
     
     local layouts = {l.tile, l.max, l.tile, l.max, l.max, l.tile}
     -- Each screen has its own tag table.
-    awful.tag({"", "", "", "", "", ""}, s, layouts)
+    awful.tag(tagnames, s, layouts)
     -- awful.tag({ "term", "web", "code", "music", "chat", "pass" }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
@@ -257,7 +261,7 @@ awful.screen.connect_for_each_screen(function(s)
         ontop = true,
         visible = false,
         shape = gears.shape.rounded_rect,
-				screen = s
+        screen = s
     }
     s.layouttimer:connect_signal("timeout", function()
         s.layoutpopup.visible = false
@@ -312,13 +316,54 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist {
+        screen = s,
+        filter = awful.widget.tasklist.filter.currenttags,
+        buttons = tasklist_buttons,
+        layout = {
+            spacing = 30,
+            layout = wibox.layout.fixed.horizontal,
+            spacing_widget = {
+                {
+                    forced_width = 5,
+                    forced_height = 24,
+                    thickness = 1,
+                    widget = wibox.widget.separator
+                },
+                valign = 'center',
+                halign = 'center',
+                widget = wibox.container.place
+            }
+        },
+        widget_template = {
+            {
+                wibox.widget.base.make_widget(),
+                id = 'background_role',
+                widget = wibox.container.background
+            },
+            {
+                {
+                    id = 'clienticon',
+                    widget = awful.widget.clienticon
+                },
+                margins = 0,
+                widget = wibox.container.margin
+            },
+            nil,
+            create_callback = function(self, c, index, objects) -- luacheck: no unused args
+                self:get_children_by_id('clienticon')[1].client = c
+            end,
+            layout = wibox.layout.align.vertical
+        }
+    }
 
     -- Create the wibox
     s.mywibox = awful.wibar({
         position = beautiful.wibar_position,
         screen = s
     })
+
+    s.sidebar = sidebar(s)
 
     s.systray = wibox.widget.systray()
     s.systray.set_base_size(25)
@@ -332,7 +377,7 @@ awful.screen.connect_for_each_screen(function(s)
                 layout = wibox.layout.fixed.horizontal,
                 spacing = 10,
                 { -- Left widgets
-                    { 
+                    {
                         layout = wibox.layout.fixed.horizontal,
                         s.mytaglist
                     },
@@ -350,27 +395,13 @@ awful.screen.connect_for_each_screen(function(s)
                     widget = wibox.container.background,
                     bg = beautiful.black,
                     shape = gears.shape.rounded_rect
-                },
+                }
             },
             nil,
             {
                 layout = wibox.layout.fixed.horizontal,
                 spacing = 10,
                 {
-                    { -- Middle widget
-                        {
-                            spotify_widget({
-                                max_length = -1
-                            }),
-                            widget = wibox.container.margin,
-                            right = 20,
-                            left = 20
-                        },
-                        widget = wibox.container.background,
-                        bg = beautiful.green,
-                        fg = beautiful.black,
-                        shape = gears.shape.rounded_rect
-                    },
                     {
                         {
                             s.systray,
@@ -444,75 +475,36 @@ awful.rules.rules = {{
         keys = clientkeys,
         buttons = clientbuttons,
         size_hints_honor = false, -- Remove gaps between terminals
-        screen = awful.screen.preferred,
         callback = awful.client.setslave,
         placement = awful.placement.no_overlap + awful.placement.no_offscreen
-    }
-}, {
-    rule = {
-        name = {"Microsoft Teams Notification"}
-    },
-    properties = {
-        focus = false,
-        ontop = true,
-        floating = true
-    }
-}, {
-    rule_any = {
-        instance = {"DTA", -- Firefox addon DownThemAll.
-        "copyq" -- Includes session name in class.
-        },
-        class = {"Arandr", "Gpick", "Kruler", "MessageWin", -- kalarm.
-        "Sxiv", "Wpa_gui", "pinentry", "veromix", "xtightvncviewer"},
-
-        name = {"Event Tester" -- xev.
-        },
-        role = {"AlarmWindow", -- Thunderbird's calendar.
-        "pop-up" -- e.g. Google Chrome's (detached) Developer Tools.
-        }
-    },
-    properties = {
-        floating = true
-    }
-}, {
-    rule_any = {
-        type = {"normal", "dialog"}
-    },
-    properties = {
-        titlebars_enabled = false,
-        shape = gears.shape.rounded_rect
     }
 }, {
     rule = {
         class = "Alacritty"
     },
     properties = {
-        screen = awful.screen.focused(),
-        tag = awful.screen.focused().tags[1]
+        tag = tagnames[1]
     }
 }, {
     rule = {
-        role = "^browser$"
+        class = "firefox"
     },
     properties = {
-        screen = awful.screen.focused(),
-        tag = awful.screen.focused().tags[2]
+        tag = tagnames[2]
     }
 }, {
     rule = {
-        class = "Slack"
+        class = "Code"
     },
     properties = {
-        screen = awful.screen.focused(),
-        tag = awful.screen.focused().tags[5]
+        tag = tagnames[3]
     }
 }, {
     rule = {
-        class = "Microsoft Teams - Preview"
+        class = "Spotify"
     },
     properties = {
-        screen = awful.screen.focused(),
-        tag = awful.screen.focused().tags[5]
+        tag = tagnames[4]
     }
 }}
 -- }}}

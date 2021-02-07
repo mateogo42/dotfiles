@@ -8,6 +8,7 @@ local dpi = xresources.apply_dpi
 local gears = require("gears")
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
+local dir = os.getenv('HOME') .. '/.config/awesome/icons/'
 
 local theme = {}
 
@@ -19,6 +20,7 @@ theme.blue = "#61afef"
 theme.magenta = "#c678dd"
 theme.cyan = "#56b6c2"
 theme.white = "#abb2bf"
+theme.transparent = "#00000000"
 
 theme.font          = "Font Awesome 5 Free Solid 10"
 
@@ -36,10 +38,14 @@ theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
 theme.useless_gap   = dpi(10)
-theme.border_width  = dpi(0)
-theme.border_normal = "#000000"
-theme.border_focus  = "#535d6c"
+theme.border_width  = dpi(3)
+theme.border_normal = theme.green
+theme.border_focus  = theme.red 
 theme.border_marked = "#91231c"
+
+-- progress bar
+theme.progressbar_bg = theme.black
+theme.progressbar_fg = theme.red
 
 -- There are other variable sets
 -- overriding the default one when
@@ -110,7 +116,7 @@ theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar
 theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = "~/Pictures/aurora.png"
+theme.wallpaper = "~/Pictures/tanjiro.jpeg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
@@ -143,6 +149,16 @@ theme.icon_theme = nil
 theme.wibar_position = "top"
 theme.wibar_bg = "#00000000"
 theme.wibar_height = 40
+
+-- sidebar theme
+theme.sidebar_position = "left"
+theme.sidebar_bg = theme.black
+theme.sidebar_width = 300
+
+-- icons
+theme.volume_on_icon = dir .. 'volume_up.svg'
+theme.volume_off_icon = dir .. 'volume_off.svg'
+theme.brightness_icon = dir .. 'brightness.svg'
 
 return theme
 
