@@ -19,7 +19,13 @@ require("awful.hotkeys_popup.keys.vim")
 -- Spotify integration
 local spotify_widget = require("spotify")
 
+-- {{{ Variable definitions
+-- Themes define colours, icons, font and wallpapers.
+-- Chosen colors and buttons look alike adapta maia theme
+beautiful.init("/home/mateo/.config/awesome/theme.lua")
+
 require("sidebar")
+require("logout.logout")
 
 local tagnames = {"", "", "", "", "", ""}
 
@@ -52,10 +58,6 @@ do
 end
 -- }}}
 
--- {{{ Variable definitions
--- Themes define colours, icons, font and wallpapers.
--- Chosen colors and buttons look alike adapta maia theme
-beautiful.init("/home/mateo/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 browser = "google-chrome-stable"
@@ -214,11 +216,11 @@ awful.screen.connect_for_each_screen(function(s)
         local selected_tag = s.selected_tags[1]
         local clients = s.tags[index]:clients()
         if index == selected_tag.index then
-            self:get_children_by_id("underline")[1].bg = beautiful.red
-        elseif #clients > 0 then
-            self:get_children_by_id("underline")[1].bg = beautiful.yellow
+            self:get_children_by_id("background_role_tag")[1].bg = beautiful.white
+            self:get_children_by_id("background_role_tag")[1].fg = beautiful.black
         else
-            self:get_children_by_id("underline")[1].bg = beautiful.black
+            self:get_children_by_id("background_role_tag")[1].bg = beautiful.black
+            self:get_children_by_id("background_role_tag")[1].fg = beautiful.white
         end
     end
     s.layoutlist = awful.widget.layoutlist {
@@ -278,83 +280,23 @@ awful.screen.connect_for_each_screen(function(s)
         screen = s,
         filter = awful.widget.taglist.filter.all,
         buttons = taglist_buttons,
+        layout = wibox.layout.fixed.horizontal,
         widget_template = {
             {
-                layout = wibox.layout.align.vertical,
-                expand = "none",
-                nil,
                 {
-                    {
-                        {
-                            id = 'text_role',
-                            widget = wibox.widget.textbox
-                        },
-                        layout = wibox.layout.fixed.horizontal
-                    },
-                    left = 20,
-                    right = 20,
-                    widget = wibox.container.margin
+                    id = 'text_role',
+                    widget = wibox.widget.textbox
                 },
-                {
-                    {
-                        left = 20,
-                        right = 20,
-                        top = 5,
-                        widget = wibox.container.margin
-                    },
-                    id = 'underline',
-                    shape = gears.shape.rectangle,
-                    widget = wibox.container.background
-                }
-            },
-            id = "background_role",
-            widget = wibox.container.background,
-            bg = beautiful.red,
-            create_callback = s.set_active_tag,
-            update_callback = s.set_active_tag
-        }
-    }
-
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen = s,
-        filter = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons,
-        layout = {
-            spacing = 30,
-            layout = wibox.layout.fixed.horizontal,
-            spacing_widget = {
-                {
-                    forced_width = 5,
-                    forced_height = 24,
-                    thickness = 1,
-                    widget = wibox.widget.separator
-                },
-                valign = 'center',
-                halign = 'center',
-                widget = wibox.container.place
-            }
-        },
-        widget_template = {
-            {
-                wibox.widget.base.make_widget(),
-                id = 'background_role',
-                widget = wibox.container.background
-            },
-            {
-                {
-                    id = 'clienticon',
-                    widget = awful.widget.clienticon
-                },
-                margins = 0,
+                left = 20,
+                right = 20,
                 widget = wibox.container.margin
             },
-            nil,
-            create_callback = function(self, c, index, objects) -- luacheck: no unused args
-                self:get_children_by_id('clienticon')[1].client = c
-            end,
-            layout = wibox.layout.align.vertical
-        }
+            id = "background_role_tag",
+            widget = wibox.container.background,
+            shape = gears.shape.circle,
+            create_callback = s.set_active_tag,
+            update_callback = s.set_active_tag
+        },
     }
 
     -- Create the wibox
@@ -365,89 +307,23 @@ awful.screen.connect_for_each_screen(function(s)
 
     s.sidebar = sidebar(s)
 
-    s.systray = wibox.widget.systray()
-    s.systray.set_base_size(25)
-
     -- Add widgets to the wibox
     s.mywibox:setup{
         {
             layout = wibox.layout.align.horizontal,
             expand = "none",
-            {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = 10,
-                { -- Left widgets
-                    {
-                        layout = wibox.layout.fixed.horizontal,
-                        s.mytaglist
-                    },
-                    widget = wibox.container.background,
-                    bg = beautiful.black,
-                    shape = gears.shape.rounded_rect
-                },
-                {
-                    {
-                        s.mytasklist,
-                        widget = wibox.container.margin,
-                        left = 20,
-                        right = 20
-                    },
-                    widget = wibox.container.background,
-                    bg = beautiful.black,
-                    shape = gears.shape.rounded_rect
-                }
-            },
             nil,
             {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = 10,
                 {
-                    {
-                        {
-                            s.systray,
-                            widget = wibox.container.margin,
-                            left = 20,
-                            right = 20,
-                            top = 3
-                        },
-                        widget = wibox.container.background,
-                        bg = beautiful.black,
-                        shape = gears.shape.rounded_rect
-                    },
-                    layout = wibox.layout.fixed.horizontal,
-                    spacing = 10
+                    layout = wibox.layout.flex.horizontal,
+                    s.mytaglist
                 },
-                {
-                    {
-                        mytextclock,
-                        widget = wibox.container.margin,
-                        left = 10,
-                        right = 10,
-                        top = 3
-                    },
-                    widget = wibox.container.background,
-                    bg = beautiful.black,
-                    shape = gears.shape.rounded_rect
-                },
-                {
-                    {
-                        mytextdate,
-                        widget = wibox.container.margin,
-                        left = 10,
-                        right = 10,
-                        top = 3
-                    },
-                    widget = wibox.container.background,
-                    bg = beautiful.blue,
-                    fg = beautiful.black,
-                    shape = gears.shape.rounded_rect
-                }
-            }
+                widget = wibox.container.background,
+                bg = beautiful.transparent,
+            },
+            nil
         },
         widget = wibox.container.margin,
-        top = 10,
-        left = beautiful.useless_gap * 2,
-        right = beautiful.useless_gap * 2
     }
 end)
 -- }}}

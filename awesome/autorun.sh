@@ -25,7 +25,6 @@ run xfsettingsd
 run nm-applet
 run light-locker
 run xcape -e 'Super_L=Super_L|Control_L|Escape'
-run thunar --daemon
 run pa-applet
 run pamac-tray
 run flameshot
@@ -37,6 +36,5 @@ if (command -v system-config-printer-applet && ! pgrep applet.py ); then
   system-config-printer-applet &
 fi
 
-run compton --shadow-exclude '!focused'
 run blueman-applet
 run msm_notifier

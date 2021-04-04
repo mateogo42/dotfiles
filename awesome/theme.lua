@@ -23,6 +23,7 @@ theme.white = "#abb2bf"
 theme.transparent = "#00000000"
 
 theme.font          = "Font Awesome 5 Free Solid 10"
+theme.custom_font   = "Font Awesome 5 Free Solid " 
 
 theme.bg_normal     = theme.black
 theme.bg_focus      = theme.red
@@ -43,9 +44,16 @@ theme.border_normal = theme.green
 theme.border_focus  = theme.red 
 theme.border_marked = "#91231c"
 
+
 -- progress bar
 theme.progressbar_bg = theme.black
 theme.progressbar_fg = theme.red
+
+-- cpu meter
+theme.cpu_meter_color = theme.cyan
+theme.memory_meter_color = theme.yellow
+theme.hdd_meter_color = theme.magenta
+theme.ssd_meter_color = theme.white
 
 -- There are other variable sets
 -- overriding the default one when
@@ -152,8 +160,8 @@ theme.wibar_height = 40
 
 -- sidebar theme
 theme.sidebar_position = "left"
-theme.sidebar_bg = theme.black
-theme.sidebar_width = 300
+theme.sidebar_bg = theme.white .. '1F'
+theme.sidebar_width = 500
 
 -- icons
 theme.volume_on_icon = dir .. 'volume_up.svg'

@@ -6,27 +6,28 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-surround'
-Plug 'rakr/vim-one'
 Plug 'joshdick/onedark.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'ycm-core/YouCompleteMe'
+Plug 'vim-airline/vim-airline'
 Plug 'timonv/vim-cargo'
 Plug 'rust-lang/rust.vim'
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'dag/vim-fish'
-Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 call plug#end()
 
 " Start Page
 let g:airline_theme='onedark'
+let g:airline#extensions#tabline#enabled = 1
+set noshowmode
 syntax on
 let g:onedark_color_overrides = {
 			\	"comment_grey": {"gui": "#5C7E8C", "cterm": "66", "cterm16": "255"},
 			\}
 colorscheme onedark
 highlight Normal ctermbg=black
+highlight nonText ctermbg=black
 highlight Pmenu ctermbg=black ctermfg=gray
 highlight PmenuSel ctermbg=white ctermfg=gray
 
