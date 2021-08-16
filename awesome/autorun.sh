@@ -28,6 +28,9 @@ run xcape -e 'Super_L=Super_L|Control_L|Escape'
 run pa-applet
 run pamac-tray
 run flameshot
+run picom
+run dunst
+run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 2>/dev/null
 
 ## The following are not included in minimal edition by default
 ## but autorun.sh will pick them up if you install them

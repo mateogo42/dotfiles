@@ -9,4 +9,8 @@ vim.cmd "let &fcs='eob: '"
 
 opt.mouse = "a"
 opt.number = true
+opt.expandtab = true
+opt.tabstop = 2
+opt.softtabstop = 2
+opt.shiftwidth = 2
 opt.formatoptions = opt.formatoptions - "o"
