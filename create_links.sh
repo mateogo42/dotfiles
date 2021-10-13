@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for env in $(ls -I create_links.sh)
+for env in $(ls -I create_links.sh -I README.md)
 do
 	target="$HOME/.config/$env"
 	if [ -f ${target} ] || [ -L ${target} ]; then

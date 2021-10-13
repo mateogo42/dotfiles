@@ -161,25 +161,9 @@ globalkeys =
     {},
     "Print",
     function()
-      awful.spawn.with_shell("sleep 0.1 && /usr/bin/i3-scrot -d")
+      awful.spawn.with_shell("sleep 0.1 && /usr/bin/flameshot launcher")
     end,
     {description = "capture a screenshot", group = "screenshot"}
-  ),
-  awful.key(
-    {"Control"},
-    "Print",
-    function()
-      awful.spawn.with_shell("sleep 0.1 && /usr/bin/i3-scrot -w")
-    end,
-    {description = "capture a screenshot of active window", group = "screenshot"}
-  ),
-  awful.key(
-    {"Shift"},
-    "Print",
-    function()
-      awful.spawn.with_shell("sleep 0.1 && /usr/bin/i3-scrot -s")
-    end,
-    {description = "capture a screenshot of selection", group = "screenshot"}
   ),
   awful.key(
     {modkey, "Control"},
@@ -215,19 +199,19 @@ globalkeys =
       }
     end,
     {description = "lua execute prompt", group = "awesome"}
-  ),
-  -- Menubar
-  awful.key(
-    {modkey},
-    "w",
-    function()
-      local screen = awful.screen.focused()
-      if screen.sidebar then
-        screen.sidebar.visible = not screen.sidebar.visible
-      end
-    end,
-    {description = "show the menubar", group = "awesome"}
   )
+  -- Menubar
+  -- awful.key(
+  --   {modkey},
+  --   "w",
+  --   function()
+  --     local screen = awful.screen.focused()
+  --     if screen.sidebar then
+  --       screen.sidebar.visible = not screen.sidebar.visible
+  --     end
+  --   end,
+  --   {description = "show the menubar", group = "awesome"}
+  -- )
 )
 
 clientkeys =

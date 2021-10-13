@@ -1,12 +1,16 @@
 --colorscheme
 require("onedark").setup()
 
+-- Color Highlights
+require("colorizer").setup()
+
 local opt = vim.opt
 
 vim.cmd "syntax enable"
 vim.cmd "filetype plugin indent on"
 vim.cmd "let &fcs='eob: '"
 
+opt.termguicolors = true
 opt.mouse = "a"
 opt.number = true
 opt.expandtab = true

@@ -1,0 +1,18 @@
+format = '''
+[\[$username@$hostname\]](bold yellow) in $directory$git_branch$character
+'''
+add_newline = true
+[username]
+show_always = true
+format = "$user"
+
+[hostname]
+ssh_only = false
+format = "$hostname"
+
+[character]
+success_symbol = '[](bold green)'
+error_symbol = '[](bold red)'
+
+[git_branch]
+format = '[\( $branch\)](bold purple) '

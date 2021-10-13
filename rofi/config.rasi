@@ -1,13 +1,11 @@
 
 configuration {
-  font:							"Hack Nerd Font 10";
+  font:							"JetBrainsMono Nerd Font Mono 12";
   show-icons:                     true;
   icon-theme: 					"Tela";
   display-drun: 					"";
   drun-display-format:            "{name}";
   disable-history:                false;
-  fullscreen:                     false;
-  hide-scrollbar: 				true;
   sidebar-mode: 					false;
 }
 
@@ -15,15 +13,16 @@ configuration {
 
 window {
   transparency:                   "real";
-  background-color:               @bg;
+  background-color:               @al;
   text-color:                     @fg;
-  border:							0px;
-  border-color:					@ac;
+  border:							            0px;
+  border-color:					          @ac;
   border-radius:                  12px;
-  width:							18%;
+  width:							             18%;
   location:                       center;
   x-offset:                       0;
   y-offset:                       0;
+  padding: 0px;
 }
 
 prompt {
@@ -66,6 +65,8 @@ listview {
   cycle:                          false;
   dynamic:                        true;
   layout:                         vertical;
+  scrollbar:                      false;
+  border:                         0% 0% 0% 0%;
 }
 
 mainbox {
@@ -79,11 +80,19 @@ mainbox {
 }
 
 element {
-  background-color:               @al;
-  text-color:                     @fg;
   orientation:                    horizontal;
   border-radius:                  0%;
   padding:                        1% 0.5% 1% 0.5%;
+}
+
+element.normal.normal {
+  background-color:               @bg;
+  text-color:                     @fg;
+}
+
+element.alternate.normal {
+  background-color:               @bg;
+  text-color:                     @fg;
 }
 
 element-icon {
@@ -98,9 +107,9 @@ element-text {
   margin:                         0% 0.25% 0% 0.25%;
 }
 
-element selected {
-  background-color:               @se;
-  text-color:                     @fg;
+element.selected.normal {
+    background-color:               @se;
+    text-color:                     @fg;
   border:							0% 0% 0% 0%;
   border-radius:                  0px;
   border-color:                  	@bg;

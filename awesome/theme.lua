@@ -25,15 +25,16 @@ theme.cyan = "#56b6c2"
 theme.white = "#abb2bf"
 theme.transparent = "#00000000"
 
-theme.font = "Hack Nerd Font Mono 20"
-theme.custom_font = "Hack Nerd Font Mono "
+theme.font = "JetBrainsMono Nerd Font Mono 18"
+theme.font_normal = "JetBrainsMono Nerd Font 18"
+theme.custom_font = "JetBrainsMono Nerd Font Mono "
 
 theme.bg_normal = theme.black
 theme.bg_focus = theme.red
 theme.bg_urgent = theme.red
 theme.bg_minimize = "#444444"
 
-theme.bg_systray = theme.bg_normal
+theme.bg_systray = theme.black2
 theme.systray_icon_spacing = dpi(20)
 
 theme.fg_normal = theme.white
@@ -97,9 +98,16 @@ theme.notification_width = 300
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
 -- menu_[border_color|border_width]
+theme.menu_font = theme.custom_font .. "12"
 theme.menu_submenu_icon = themes_path .. "default/submenu.png"
-theme.menu_height = dpi(15)
-theme.menu_width = dpi(100)
+theme.menu_height = dpi(30)
+theme.menu_width = dpi(170)
+theme.menu_border_width = 0
+theme.menu_border_color = theme.transparent
+theme.menu_bg_normal = theme.black2
+theme.menu_fg_normal = "#ffffff"
+theme.menu_fg_focus = "#ffffff"
+theme.menu_bg_focus = "#1f2329"
 
 -- You can add as many variables as
 -- you wish and access them by using
@@ -132,8 +140,6 @@ theme.titlebar_maximized_button_normal_inactive = themes_path .. "default/titleb
 theme.titlebar_maximized_button_focus_inactive = themes_path .. "default/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_active = themes_path .. "default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active = themes_path .. "default/titlebar/maximized_focus_active.png"
-
-theme.wallpaper = "~/Pictures/wallpaper.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path .. "default/layouts/fairhw.png"

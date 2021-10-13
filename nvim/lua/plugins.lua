@@ -20,5 +20,8 @@ require "paq" {
   "nvim-telescope/telescope.nvim",
   "mhartington/formatter.nvim",
   "famiu/bufdelete.nvim",
-  "nvim-lua/lsp-status.nvim"
+  "nvim-lua/lsp-status.nvim",
+  "norcalli/nvim-colorizer.lua",
+  "lukas-reineke/indent-blankline.nvim",
+  "glepnir/dashboard-nvim"
 }

@@ -12,8 +12,8 @@ local naughty = require("naughty")
 -- naughty.config.defaults["width"] = 400
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local dpi = beautiful.xresources.apply_dpi
 -- Freedesktop menu
-local freedesktop = require("freedesktop")
 -- Enable VIM help for hotkeys widget when client with matching name is opened:
 require("awful.hotkeys_popup.keys.vim")
 
@@ -22,7 +22,8 @@ require("awful.hotkeys_popup.keys.vim")
 -- Chosen colors and buttons look alike adapta maia theme
 beautiful.init("/home/mateo/.config/awesome/theme.lua")
 
-require("sidebar")
+require("widgets.sidebar")
+require("widgets.menu")
 require("logout.logout")
 
 local tagnames = {"", "", "阮", "", "漣"}
@@ -67,7 +68,7 @@ end
 browser = "firefox"
 filemanager = "dolphin"
 gui_editor = "mousepad"
-terminal = "kitty"
+terminal = "wezterm"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -110,62 +111,7 @@ local function client_menu_toggle_fn()
 end
 -- }}}
 
--- {{{ Menu
--- Create a launcher widget and a main menu
-myawesomemenu = {
-  {
-    "hotkeys",
-    function()
-      return false, hotkeys_popup.show_help
-    end,
-    menubar.utils.lookup_icon("preferences-desktop-keyboard-shortcuts")
-  },
-  {"manual", terminal .. " -e man awesome", menubar.utils.lookup_icon("system-help")},
-  {
-    "edit config",
-    gui_editor .. " " .. awesome.conffile,
-    menubar.utils.lookup_icon("accessories-text-editor")
-  },
-  {"restart", awesome.restart, menubar.utils.lookup_icon("system-restart")}
-}
-myexitmenu = {
-  {
-    "log out",
-    function()
-      awesome.quit()
-    end,
-    menubar.utils.lookup_icon("system-log-out")
-  },
-  {"suspend", "systemctl suspend", menubar.utils.lookup_icon("system-suspend")},
-  {"hibernate", "systemctl hibernate", menubar.utils.lookup_icon("system-suspend-hibernate")},
-  {"reboot", "systemctl reboot", menubar.utils.lookup_icon("system-reboot")},
-  {"shutdown", "poweroff", menubar.utils.lookup_icon("system-shutdown")}
-}
-mymainmenu =
-  freedesktop.menu.build(
-  {
-    icon_size = 32,
-    before = {
-      {"Terminal", terminal, menubar.utils.lookup_icon("utilities-terminal")},
-      {"Browser", browser, menubar.utils.lookup_icon("internet-web-browser")},
-      {"Files", filemanager, menubar.utils.lookup_icon("system-file-manager")}
-    },
-    after = {
-      {"Awesome", myawesomemenu, "/usr/share/awesome/icons/awesome32.png"},
-      {"Exit", myexitmenu, menubar.utils.lookup_icon("system-shutdown")}
-    }
-  }
-)
-mylauncher =
-  awful.widget.launcher(
-  {
-    image = beautiful.awesome_icon,
-    menu = mymainmenu
-  }
-)
--- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
--- }}}
 
 -- {{{ Wibar
 -- Create a textclock widget
@@ -276,13 +222,14 @@ local function set_wallpaper(s)
   end
 end
 
+mymainmenu = menu()
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(
   function(s)
     -- Wallpaper
-    set_wallpaper(s)
+    -- set_wallpaper(s)
     local l = awful.layout.suit -- Alias to save time :)
 
     local layouts = {l.tile, l.max, l.max, l.max, l.tile}
@@ -330,15 +277,22 @@ awful.screen.connect_for_each_screen(
         screen = s
       }
     )
+    local button = nil
 
-    s.sidebar = sidebar(s)
+    if s.index == screen.primary.index then
+      button = sidebar_widget(s)
+    end
 
     -- Add widgets to the wibox
     s.mywibox:setup {
       {
         layout = wibox.layout.align.horizontal,
         expand = "none",
-        nil,
+        {
+          button,
+          widget = wibox.container.margin,
+          left = 20
+        },
         {
           {
             layout = wibox.layout.flex.horizontal,
@@ -349,7 +303,8 @@ awful.screen.connect_for_each_screen(
         },
         nil
       },
-      widget = wibox.container.margin
+      widget = wibox.container.margin,
+      top = dpi(2)
     }
   end
 )
@@ -362,18 +317,9 @@ root.buttons(
       {},
       1,
       function()
-        mymainmenu:hide()
+        mymainmenu.hide()
       end
-    ),
-    awful.button(
-      {},
-      3,
-      function()
-        mymainmenu:toggle()
-      end
-    ),
-    awful.button({}, 4, awful.tag.viewnext),
-    awful.button({}, 5, awful.tag.viewprev)
+    )
   )
 )
 -- }}}
@@ -393,12 +339,21 @@ awful.rules.rules = {
       buttons = clientbuttons,
       size_hints_honor = false, -- Remove gaps between terminals
       callback = awful.client.setslave,
-      placement = awful.placement.no_overlap + awful.placement.no_offscreen
+      placement = awful.placement.no_overlap + awful.placement.no_offscreen,
+      maximized = false
+    }
+  },
+  {
+    rule_any = {
+      class = {"[Pp]avucontrol", "[Bb]lueberry.py", "[Nn]m-connection-editor"}
+    },
+    properties = {
+      floating = true
     }
   },
   {
     rule = {
-      class = "kitty"
+      class = "org.wezfurlong.wezterm"
     },
     properties = {
       tag = tagnames[1]
@@ -486,7 +441,7 @@ for s = 1, screen.count() do
           -- tiled state (when the client had focus).
           c.border_width = 0
         elseif c.floating or layout == "floating" then
-          c.border_width = beautiful.border_width
+          c.border_width = 0
         elseif layout == "max" or layout == "fullscreen" then
           c.border_width = 0
         else

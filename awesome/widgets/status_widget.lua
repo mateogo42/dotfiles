@@ -46,18 +46,10 @@ end
 
 return function(command, interval, callback, background_color, defaults)
   return wibox.widget {
-    {
-      {
-        awful.widget.watch(command, interval, callback, widget_info(defaults)),
-        widget = wibox.container.margin,
-        margins = 5
-      },
-      widget = wibox.container.background,
-      shape = gears.shape.rounded_rect,
-      bg = beautiful[background_color] or background_color,
-      fg = "#fff"
-    },
-    widget = wibox.container.margin,
-    margins = 10
+    awful.widget.watch(command, interval, callback, widget_info(defaults)),
+    widget = wibox.container.background,
+    shape = gears.shape.rounded_rect,
+    bg = beautiful[background_color] or background_color,
+    fg = "#fff"
   }
 end
