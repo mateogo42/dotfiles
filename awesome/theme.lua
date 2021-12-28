@@ -112,7 +112,7 @@ theme.menu_bg_focus = "#1f2329"
 -- You can add as many variables as
 -- you wish and access them by using
 -- beautiful.variable in your rc.lua
---theme.bg_widget = "#cc0000"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/wallpapers/earth.jpg"
 
 -- Define the image to load
 theme.titlebar_close_button_normal = themes_path .. "default/titlebar/close_normal.png"

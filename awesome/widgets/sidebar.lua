@@ -3,7 +3,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local rubato = require("lib.rubato")
-local naughty = require("naughty")
+-- local naughty = require("naughty")
 local buttons = require("widgets.buttons")
 local awful = require("awful")
 require("logout.logout")
@@ -93,12 +93,7 @@ slider:connect_signal(
 local volume_button =
   buttons.text_button(
   "墳",
-  function(c, x, y, b)
-    -- naughty.notify {text = tostring(c)}
-    -- naughty.notify {text = tostring(x)}
-    -- naughty.notify {text = tostring(y)}
-    -- popup.x = x
-    -- popup.y = y
+  function(_, _, _, b)
     local value = "1%"
     if b == 4 then
       value = value .. "+"
@@ -154,9 +149,9 @@ function sidebar_widget(s)
     {
       position = beautiful.sidebar_position,
       screen = s,
-      width = s.geometry.width * 0.2,
-      height = s.workarea.height * 0.65,
-      y = s.workarea.y,
+      width = s.geometry.width * 0.8,
+      height = s.workarea.height * 0.2,
+      x = s.workarea.x,
       visible = true,
       ontop = true,
       bg = beautiful.transparent
@@ -166,25 +161,8 @@ function sidebar_widget(s)
   sidebar:setup {
     {
       {
-        layout = wibox.layout.fixed.vertical,
+        layout = wibox.layout.flex.horizontal,
         spacing = spacing,
-        {
-          {
-            {
-              user_image,
-              username,
-              widget = wibox.layout.fixed.vertical,
-              spacing = 10
-            },
-            widget = wibox.container.margin,
-            top = 20,
-            bottom = 20
-          },
-          widget = wibox.container.background,
-          bg = beautiful.black2,
-          shape = gears.shape.rounded_rect
-        },
-        logoutmenu,
         {
           {
             {
@@ -206,21 +184,39 @@ function sidebar_widget(s)
               },
               layout = wibox.layout.fixed.vertical
             },
-            widget = wibox.container.margin,
-            margins = 10
+            widget = wibox.container.place
           },
           widget = wibox.container.background,
           bg = beautiful.black2,
           shape = gears.shape.rounded_rect
         },
         {
-          bluetooth_button,
-          wifi_button,
-          volume_button,
-          brightness_button,
-          layout = wibox.layout.flex.horizontal,
-          spacing = spacing,
-          forced_with = 100
+          {
+            {
+              user_image,
+              widget = wibox.layout.flex.horizontal,
+              spacing = 10
+            },
+            widget = wibox.container.margin,
+            top = 10,
+            bottom = 10
+          },
+          widget = wibox.container.background,
+          bg = beautiful.black2,
+          shape = gears.shape.rounded_rect
+        },
+        {
+          logoutmenu,
+          {
+            bluetooth_button,
+            wifi_button,
+            volume_button,
+            brightness_button,
+            layout = wibox.layout.flex.horizontal,
+            spacing = spacing
+          },
+          layout = wibox.layout.flex.vertical,
+          spacing = spacing
         },
         spotify_widget()
       },
@@ -249,12 +245,12 @@ function sidebar_widget(s)
     intro = 0,
     prop_intro = true,
     duration = 0.4,
-    pos = -s.geometry.width * 0.2,
+    pos = s.geometry.height,
     easing = rubato.linear,
     subscribed = function(pos)
       sidebar:geometry(
         {
-          x = s.workarea.x + pos
+          y = s.workarea.y + pos
         }
       )
     end
@@ -281,10 +277,10 @@ function sidebar_widget(s)
       if b == 1 then
         if opacity_timed.target == 0 then
           opacity_timed.target = 1
-          pos_timed.target = 0
+          pos_timed.target = s.workarea.height * 0.8
         else
           opacity_timed.target = 0
-          pos_timed.target = -s.geometry.width * 0.2
+          pos_timed.target = s.geometry.height
         end
       end
     end

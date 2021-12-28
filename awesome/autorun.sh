@@ -24,7 +24,6 @@ run flameshot
 run picom
 run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 run ~/.screenlayout/default.sh
-run variety
 
 ## The following are not included in minimal edition by default
 ## but autorun.sh will pick them up if you install them

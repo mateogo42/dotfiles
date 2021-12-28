@@ -11,7 +11,6 @@ local naughty = require("naughty")
 -- naughty.config.defaults["icon_size"] = 150
 -- naughty.config.defaults["width"] = 400
 local menubar = require("menubar")
-local hotkeys_popup = require("awful.hotkeys_popup").widget
 local dpi = beautiful.xresources.apply_dpi
 -- Freedesktop menu
 -- Enable VIM help for hotkeys widget when client with matching name is opened:
@@ -114,17 +113,6 @@ end
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 
 -- {{{ Wibar
--- Create a textclock widget
-mytextclock = wibox.widget.textclock("%H:%M ")
-mytextdate = wibox.widget.textclock("<b>%d %b %Y </b>")
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
-
-darkblue = beautiful.bg_focus
-blue = "#9EBABA"
-red = "#EB8F8F"
-separator = wibox.widget.textbox(' <span color="' .. blue .. '">| </span>')
-spacer = wibox.widget.textbox(' <span color="' .. blue .. '"> </span>')
 
 -- Create a wibox for each screen and add it
 local taglist_buttons =
@@ -223,13 +211,11 @@ local function set_wallpaper(s)
 end
 
 mymainmenu = menu()
--- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(
   function(s)
     -- Wallpaper
-    -- set_wallpaper(s)
+    set_wallpaper(s)
     local l = awful.layout.suit -- Alias to save time :)
 
     local layouts = {l.tile, l.max, l.max, l.max, l.tile}
