@@ -1,5 +1,6 @@
 format = '''
-[\[$username@$hostname\]](bold yellow) in $directory$git_branch$character
+[\[$username@$hostname\]](bold yellow) in $directory$git_branch
+$character
 '''
 add_newline = true
 [username]
