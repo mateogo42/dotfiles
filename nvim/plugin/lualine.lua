@@ -2,7 +2,29 @@ local lualine = require("lualine")
 local lsp_status = require("lsp-status")
 
 -- Colors from theme
-local colors = _G.colors
+local colors = {
+  Red = {
+    fg = "#e86671"
+  },
+  Green = {
+    fg = "#98c379"
+  },
+  Blue = {
+    fg = "#61afef"
+  },
+  Purple = {
+    fg = "#c678dd"
+  },
+  Yellow = {
+    fg = "#e5c07b"
+  },
+  Orange = {
+    fg = "#d19a66"
+  },
+  Cyan = {
+    fg = "#56b6c2"
+  }
+}
 
 local language_icons = {
   rust = " ",
@@ -136,7 +158,7 @@ ins_right {
 
 ins_right {
   "diagnostics",
-  sources = {"nvim_lsp"},
+  sources = {"nvim_diagnostic"},
   symbols = {error = " ", warn = " ", info = " "},
   color_info = colors.Cyan.fg,
   color_warn = colors.Yellow.fg,

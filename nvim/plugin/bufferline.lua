@@ -14,9 +14,8 @@ require("bufferline").setup {
     view = "multiwindow",
     show_buffer_close_icons = true,
     separator_style = "slant",
-    mappings = true,
     always_show_bufferline = true,
-    diagnostics = "nvim_lsp"
+    diagnostics = "nvim_diagnostic"
   },
   highlights = {
     close_button_selected = {

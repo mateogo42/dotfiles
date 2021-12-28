@@ -4,8 +4,7 @@ require "paq" {
   "kyazdani42/nvim-tree.lua",
   "navarasu/onedark.nvim",
   "neovim/nvim-lspconfig",
-  "kabouzeid/nvim-lspinstall",
-  "hrsh7th/nvim-compe",
+  "williamboman/nvim-lsp-installer",
   "L3MON4D3/LuaSnip",
   "rafamadriz/friendly-snippets",
   "hoob3rt/lualine.nvim",
@@ -23,5 +22,14 @@ require "paq" {
   "nvim-lua/lsp-status.nvim",
   "norcalli/nvim-colorizer.lua",
   "lukas-reineke/indent-blankline.nvim",
-  "glepnir/dashboard-nvim"
+  "glepnir/dashboard-nvim",
+  "tami5/lspsaga.nvim",
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-path",
+  "hrsh7th/cmp-cmdline",
+  "hrsh7th/nvim-cmp",
+  "hrsh7th/cmp-nvim-lua",
+  "saadparwaiz1/cmp_luasnip",
+  "onsails/lspkind-nvim"
 }

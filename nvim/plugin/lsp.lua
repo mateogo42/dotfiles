@@ -1,10 +1,13 @@
-local nvim_lsp = require("lspconfig")
+local lspconfig = require("lspconfig")
 local lsp_status = require("lsp-status")
+local lsp_installer = require("nvim-lsp-installer")
+local saga = require("lspsaga")
+saga.init_lsp_saga()
 lsp_status.register_progress()
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
   local function buf_set_keymap(...)
     vim.api.nvim_buf_set_keymap(bufnr, ...)
   end
@@ -18,26 +21,14 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = {noremap = true, silent = true}
 
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-  buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-  buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-  buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-  buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-  buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-  buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-  buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-  buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-  buf_set_keymap("n", "<space>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-  buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-  buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-  buf_set_keymap("n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-
-  lsp_status.on_attach(client, bufnr)
+  -- Show hover docs
+  buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+  -- Show signature help
+  buf_set_keymap("n", "<C-k>", ":Lspsaga signature_help<CR>", opts)
+  buf_set_keymap("n", "gr", ":Lspsaga rename<CR>", opts)
+  buf_set_keymap("n", "gd", ":Lspsaga preview_definition<CR>", opts)
+  buf_set_keymap("n", "<space>ca", ":Lspsaga code_action<CR>", opts)
+  buf_set_keymap("v", "<space>ca", ":<C-U>Lspsaga range_code_action<CR>", opts)
 end
 
 -- Configure lua language server for neovim development
@@ -55,11 +46,31 @@ local lua_settings = {
     workspace = {
       -- Make the server aware of Neovim runtime files
       library = {
-        [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-        [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-        ["/usr/share/awesome/lib"] = true
+        vim.fn.expand("$VIMRUNTIME/lua"),
+        vim.fn.expand("$VIMRUNTIME/lua/vim/lsp"),
+        "/usr/share/awesome/lib"
       }
     }
+  }
+}
+
+-- Configure Go language server
+local go_settings = {
+  gopls = {
+    analyses = {
+      unusedparams = true
+    },
+    staticcheck = true,
+    linksInHover = false,
+    codelenses = {
+      generate = true,
+      gc_details = true,
+      regenerate_cgo = true,
+      tidy = true,
+      upgrade_dependency = true,
+      vendor = true
+    },
+    usePlaceholders = true
   }
 }
 
@@ -73,8 +84,8 @@ local rust_settings = {
 }
 
 -- config that activates keymaps and enables snippet support
-local function make_config()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+local function make_config(server)
+  local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
   capabilities = vim.tbl_extend("keep", capabilities or {}, lsp_status.capabilities)
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   local config = {
@@ -91,48 +102,32 @@ local function make_config()
   return config
 end
 
--- lsp-install
-local function setup_servers()
-  require "lspinstall".setup()
-
-  -- get all installed servers
-  local servers = require "lspinstall".installed_servers()
-  -- ... and add manually installed servers
-  table.insert(servers, "clangd")
-  table.insert(servers, "sourcekit")
-
-  for _, server in pairs(servers) do
-    local config = make_config()
-
-    -- language specific config
-    if server == "lua" then
+-- lsp-installer
+lsp_installer.on_server_ready(
+  function(server)
+    local config = make_config(server)
+    if server.name == "sumneko_lua" then
+      print(server.name)
       config.settings = lua_settings
     end
-    if server == "rust" then
+    if server.name == "rust_analyzer" then
       config.settings = rust_settings
     end
-    if server == "python" then
+    if server.name == "pyright" then
       config.root_dir = function(filename)
-        return nvim_lsp.util.root_pattern(".git", "setup.py", "setup.cfg", "pyproject.toml", "requirements.txt")(
+        return lspconfig.util.root_pattern(".git", "setup.py", "setup.cfg", "pyproject.toml", "requirements.txt")(
           filename
-        ) or nvim_lsp.util.path.dirname(filename)
+        ) or lspconfig.util.path.dirname(filename)
       end
     end
-    if server == "sourcekit" then
-      config.filetypes = {"swift", "objective-c", "objective-cpp"} -- we don't want c and cpp!
-    end
-    if server == "clangd" then
-      config.filetypes = {"c", "cpp"} -- we don't want objective-c and objective-cpp!
+    if server.name == "gopls" then
+      config.cmd = {"gopls", "serve"}
+      config.root_dir = function(filename)
+        return lspconfig.util.root_pattern(".git", "go.mod")(filename) or lspconfig.util.path.dirname(filename)
+      end
+      config.settings = go_settings
     end
 
-    require "lspconfig"[server].setup(config)
+    server:setup(config)
   end
-end
-
-setup_servers()
-
--- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
-require "lspinstall".post_install_hook = function()
-  setup_servers() -- reload installed servers
-  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
-end
+)
