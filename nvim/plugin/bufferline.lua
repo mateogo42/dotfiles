@@ -19,7 +19,7 @@ require("bufferline").setup {
   },
   highlights = {
     close_button_selected = {
-      guifg = vim.g.terminal_color_1
+      fg = vim.g.terminal_color_1
     }
   }
 }

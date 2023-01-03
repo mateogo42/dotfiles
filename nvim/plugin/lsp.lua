@@ -1,6 +1,7 @@
+require("mason").setup()
+require("mason-lspconfig").setup()
 local lspconfig = require("lspconfig")
 local lsp_status = require("lsp-status")
-local lsp_installer = require("nvim-lsp-installer")
 local saga = require("lspsaga")
 saga.init_lsp_saga()
 lsp_status.register_progress()
@@ -85,7 +86,7 @@ local rust_settings = {
 
 -- config that activates keymaps and enables snippet support
 local function make_config(server)
-  local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
   capabilities = vim.tbl_extend("keep", capabilities or {}, lsp_status.capabilities)
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   local config = {
@@ -102,32 +103,38 @@ local function make_config(server)
   return config
 end
 
--- lsp-installer
-lsp_installer.on_server_ready(
+-- LSP handlers-
+require("mason-lspconfig").setup_handlers{
   function(server)
     local config = make_config(server)
-    if server.name == "sumneko_lua" then
-      print(server.name)
-      config.settings = lua_settings
+    lspconfig[server].setup(config)
+  end,
+  ["sumneko_lua"] = function() 
+    local config = make_config("sumneko_lua")
+    config.settings = lua_settings
+    lspconfig.sumneko_lua.setup(config)
+  end,
+  ["rust_analyzer"] = function()
+    local config = make_config("rust_analyzer")
+    config.settings = rust_settings
+    lspconfig.rust_analyzer.setup(config)
+  end,
+  ["pyright"] = function()
+    local config = make_config("pyright")
+    config.root_dir = function(filename)
+      return lspconfig.util.root_pattern(".git", "setup.py", "setup.cfg", "pyproject.toml", "requirements.txt")(
+      filename
+      ) or lspconfig.util.path.dirname(filename)
     end
-    if server.name == "rust_analyzer" then
-      config.settings = rust_settings
+    lspconfig.pyright.setup(config)
+  end,
+  ["gopls"] = function()
+    local config = make_config("gopls")
+    config.cmd = {"gopls", "serve"}
+    config.root_dir = function(filename)
+      return lspconfig.util.root_pattern(".git", "go.mod")(filename) or lspconfig.util.path.dirname(filename)
     end
-    if server.name == "pyright" then
-      config.root_dir = function(filename)
-        return lspconfig.util.root_pattern(".git", "setup.py", "setup.cfg", "pyproject.toml", "requirements.txt")(
-          filename
-        ) or lspconfig.util.path.dirname(filename)
-      end
-    end
-    if server.name == "gopls" then
-      config.cmd = {"gopls", "serve"}
-      config.root_dir = function(filename)
-        return lspconfig.util.root_pattern(".git", "go.mod")(filename) or lspconfig.util.path.dirname(filename)
-      end
-      config.settings = go_settings
-    end
-
-    server:setup(config)
+    config.settings = go_settings
+    lspconfig.gopls.setup(config)
   end
-)
+}

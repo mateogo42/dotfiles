@@ -11,13 +11,13 @@ end
 
 vim.g.mapleader = "\\"
 
+-- Load config
+require("config")
+
 -- Load pluings
 require("plugins")
-
 
 -- Load keybindings
 require("keys")
 
 
--- Load config
-require("config")

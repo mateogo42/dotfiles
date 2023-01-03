@@ -1,5 +1,5 @@
 --colorscheme
-require("onedark").setup()
+require("onedark").load()
 
 -- Color Highlights
 require("colorizer").setup()

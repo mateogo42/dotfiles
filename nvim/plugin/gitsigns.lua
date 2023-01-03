@@ -6,7 +6,6 @@ require("gitsigns").setup {
     change = {hl = "DiffChange"}
   },
   current_line_blame = false,
-  current_line_blame_delay = 200
 }
 
 cmd("hi DiffChange guifg=" .. "#d19a66" .. " guibg=NONE")
